@@ -93,7 +93,7 @@ class Map_Obj():
                 self.map[t[0]][t[1]] = self.water_cost
                 for y in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
                         if t[0]+y[0] < self.width and t[0]+y[0] >= 0 and t[1]+y[1] < self.length and t[1]+y[1] >= 0:
-                            if self.map[t[0]+y[0]][t[1]+y[1]] < 8:
+                            if self.map[t[0]+y[0]][t[1]+y[1]] < 8 and self.map[t[0]+y[0]][t[1]+y[1]] != self.water_cost:
                                 new_list.append((t[0]+y[0],t[1]+y[1]))
             current_list = new_list
     
