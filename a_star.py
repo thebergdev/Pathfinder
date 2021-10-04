@@ -53,7 +53,7 @@ class Node:
         return False
 
 #A* algrotithm
-def a_star(map, start, goals):
+def a_star(map, start, goals, cost_cap=9):
     start = Node(start, goals, None, map[start[0]][start[1]])
     current_node = start
     open_list = []
@@ -68,7 +68,7 @@ def a_star(map, start, goals):
             if(cord[0] < len(map) and cord[0] >= 0 and cord[1] < len(map[0]) and cord[1] >= 0):
                 children.append(Node(cord, goals, current_node, map[cord[0]][cord[1]]))
         for child in children:
-            if child.movement_cost < 9 and not child.in_list(closed_list):
+            if child.movement_cost < cost_cap and not child.in_list(closed_list):
                 heapq.heappush(open_list, child)
         if(len(open_list) > 0):
             current_node = heapq.heappop(open_list)
