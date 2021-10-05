@@ -58,10 +58,12 @@ def a_star(map, start, goals, cost_cap=9):
     current_node = start
     open_list = []
     closed_list = []
+    node_list = [start]
 
     while current_node.is_goal(goals) is False:
         #print('Current node: ', current_node.cord)
         closed_list.append(current_node)
+        
         children = []
         for i in [(1,0), (0,1), (-1,0), (0,-1)]:
             cord = current_node.cord[0] + i[0], current_node.cord[1] + i[1]
@@ -72,8 +74,10 @@ def a_star(map, start, goals, cost_cap=9):
                 heapq.heappush(open_list, child)
         if(len(open_list) > 0):
             current_node = heapq.heappop(open_list)
+            node_list.append(current_node)
+            
         else:
-            return -1, [], [], map
+            return -1, [], [], map, node_list
 
     cost = current_node.g
     path = []
@@ -83,10 +87,13 @@ def a_star(map, start, goals, cost_cap=9):
     while not (current_node == start):
         path.append(current_node.cord)
         node_path.append(current_node)
-        map[current_node.cord[0]][current_node.cord[1]] = 0
+        map[current_node.cord[0]][current_node.cord[1]] = 2
         current_node = current_node.parent
 
+    map[start.cord[0]][start.cord[1]] = 3
+    for goal in goals:
+        map[goal[0]][goal[1]] = 4
     path.append(start.cord)
     node_path.append(start)
 
-    return cost, path[::-1], node_path, map
+    return cost, path[::-1], node_path, map, node_list
