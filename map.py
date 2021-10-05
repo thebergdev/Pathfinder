@@ -160,3 +160,35 @@ class MapObj():
 
     def get_key_loc(self):
         return self.start, self.goals
+
+class MapSearchObjOrder():
+    def __init__(self, map, node_list, node_path):
+        self.map = map
+        self.node_list = node_list
+        self.node_path = node_path
+        
+        self.generate_map()
+    
+    def generate_map(self):
+        i = 0
+        for node in self.node_list:
+            self.map[node.cord[0]][node.cord[1]] = i
+            i += 1
+
+    def get_map(self):
+        return self.map
+
+class MapSearchObjG():
+    def __init__(self, map, node_list, node_path):
+        self.map = map
+        self.node_list = node_list
+        self.node_path = node_path
+        
+        self.generate_map()
+    
+    def generate_map(self):
+        for node in self.node_list:
+            self.map[node.cord[0]][node.cord[1]] = node.g
+            
+    def get_map(self):
+        return self.map
