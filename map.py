@@ -1,7 +1,7 @@
 import numpy as np
 from a_star import bmd
 
-class Map_Obj():
+class MapObj():
     def __init__(self, width, length, goal_count=1,  water_count=1, obs_count=-1, obs_radius=-1, water_cost=7, water_radius=-1):
         self.width = width
         self.length = length
