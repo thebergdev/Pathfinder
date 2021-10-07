@@ -12,10 +12,12 @@ print(key_loc)
 cost, path, node_path, map_path, node_list = a_star(map, key_loc[0], key_loc[1])
 if(cost > -1):
     print(map_path)
-    mv = MapViz(map, ['green', 'white', 'yellow',  'blue', 'grey', 'black'], [1,2,4,7,8,9,10])
-    mv.viz()
+    
     print(cost)
     print(path)
     
 else:
     print("No path")
+
+mv = MapViz(map, ['green', 'white', 'yellow',  'blue', 'grey', 'black'], [1,2,4,7,8,9,10])
+mv.viz()
