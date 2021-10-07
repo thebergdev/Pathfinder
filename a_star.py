@@ -113,7 +113,7 @@ def a_star(map, start, goals, cost_cap=9):
         else:
             return -1, [], [], map, node_history_list
 
-    #Extract cost from current node
+    #Extract cost from current node, which is a goal
     cost = current_node.g
 
     #Initializing lists for presenting found path
@@ -124,16 +124,11 @@ def a_star(map, start, goals, cost_cap=9):
     while not (current_node == start):
         path.append(current_node.cord)
         node_path.append(current_node)
-        map[current_node.cord[0]][current_node.cord[1]] = 2
         current_node = current_node.parent
 
     #Adds start node to lists
     path.append(start.cord)
     node_path.append(start)
-
-    map[start.cord[0]][start.cord[1]] = 3
-    for goal in goals:
-        map[goal[0]][goal[1]] = 4
     
     #return path cost, path as lists of cords, path as list of nodes, map, list of nodes as used
     return cost, path[::-1], node_path.reverse(), map, node_history_list
