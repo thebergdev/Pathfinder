@@ -138,5 +138,5 @@ def a_star(map, start, goals, cost_cap=9):
     path.append(start.cord)
     node_path.append(start)
     
-    #return path cost, path as lists of cords, path as list of nodes, list of nodes as used
+    #return path cost, path as lists of cords, path as list of nodes, list of nodes as used, list of nodes as discovered
     return cost, path[::-1], node_path.reverse(), node_history_list, node_discover_history_list

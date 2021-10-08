@@ -1,6 +1,5 @@
 from map import MapObj
 from visualize import MapViz
-import numpy as np
 
 mo = MapObj(20, 20, 5)
 map = mo.get_map()
