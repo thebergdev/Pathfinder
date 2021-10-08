@@ -1,2 +1,2 @@
 # Pathfinder
-A* search algorithm with manhattan distance on generated grid map to be visualized.
+A* search algorithm using manhattan distance on a generated 2d grid map visualized with matplotlib
