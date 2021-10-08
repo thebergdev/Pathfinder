@@ -1,7 +1,7 @@
 import numpy as np
-from a_star import bmd
+from a_star import a_star, bmd, Node
 
-#Class to generate, update* and visualize map*
+#Class to generate and visualize map*
 class MapObj():
     def __init__(self, width, length, goal_count=1, mountain_count=-1, mountain_radius=-1, water_count = 1, water_radius=-1):
 
@@ -9,6 +9,8 @@ class MapObj():
         self.width = width
         self.length = length
         self.goal_count = goal_count
+        self.path_value = 10
+        self.no_path_value = 11
         self.water_cost = 7
         self.climb_cost = 8
         self.mountain_cost = 9
@@ -38,7 +40,19 @@ class MapObj():
         self.start = None
 
         #Generating map
+        self.map = None
         self.generate_map()
+
+        #Initializing map layers
+        self.map_with_path = []
+        self.map_with_order = []
+        self.map_with_f = []
+
+        #Initializing A_star information array
+        #cost, path, node_path, node_list, , node_discover_list
+        self.a_star = []
+
+
 
     
 
@@ -251,35 +265,97 @@ class MapObj():
     #Returns start cord and list of goal cords
     def get_key_loc(self):
         return self.start, self.goals
-
-class MapSearchObjOrder():
-    def __init__(self, map, node_list, node_path):
-        self.map = map
-        self.node_list = node_list
-        self.node_path = node_path
-        
-        self.generate_map()
     
-    def generate_map(self):
-        i = 0
-        for node in self.node_list:
-            self.map[node.cord[0]][node.cord[1]] = i
-            i += 1
+    #Returns map with path
+    def get_map_with_path(self):
 
-    def get_map(self):
-        return self.map
+        #Check if map_with_path is not set
+        if self.map_with_path == []:
 
-class MapSearchObjG():
-    def __init__(self, map, node_list, node_path):
-        self.map = map
-        self.node_list = node_list
-        self.node_path = node_path
-        
-        self.generate_map()
-    
-    def generate_map(self):
-        for node in self.node_list:
-            self.map[node.cord[0]][node.cord[1]] = node.g
+            #Fill A_star information array
+            for i in a_star(self.map, self.start, self.goals):
+                self.a_star.append(i)
             
-    def get_map(self):
-        return self.map
+            #Copy map
+            temp = np.copy(self.map)
+
+            #Check if path was found
+            if self.a_star[0] > -1:
+
+                #For every cordinate that is a part of the path
+                for i in self.a_star[1]:
+
+                    #Set value to path_value
+                    temp[i[0]][i[1]] = self.path_value
+            
+            else:
+                #Mark start
+                temp[self.start[0]][self.start[1]] = self.no_path_value
+            
+            #Set temp as map_with_path
+            self.map_with_path = temp
+
+        #Return map with path
+        return self.map_with_path
+
+    #Returns map with node order
+    def get_map_with_order(self, index=0):
+
+        #Make sure index is max 1
+        if index > 1:
+            index = 1
+                
+        #Check if map_with_order is not set
+        if self.map_with_order == []:
+
+            #Initialize 2d array with zeroes
+            temp = np.zeros((self.width, self.length))
+
+            #Node order counter
+            i = 1
+
+            #For every node in node_history
+            for n in self.a_star[3+index]:
+
+                #Check that node is not yet visited/discorvered
+                if temp[n.cord[0]][n.cord[1]] == 0:
+    
+                    #Node's cordinate is set to i
+                    temp[n.cord[0]][n.cord[1]] = i
+
+                    #i is incremented
+                    i += 1
+
+            #Set temp as map_with_order
+            self.map_with_order = temp
+        
+        #Return map with order
+        return self.map_with_order
+    
+    #Returns map with node f
+    def get_map_with_f(self, index=0):
+
+        #Make sure index is max 1
+        if index > 1:
+            index = 1
+
+        #Check if f is not set
+        if self.map_with_f == []:
+
+            #Initialize 2d array with zeroes
+            temp = np.zeros((self.width, self.length))
+
+            #For every node in node_history
+            for n in self.a_star[3+index]:
+
+                #Check if f is not set, or n.f is better than current f
+                if temp[n.cord[0]][n.cord[1]] > 0 and n.f < temp[n.cord[0]][n.cord[1]] or temp[n.cord[0]][n.cord[1]] == 0:
+
+                    #Node's cordinate is set to node's f
+                    temp[n.cord[0]][n.cord[1]] = n.f
+
+            #Set temp as map_with_f
+            self.map_with_f = temp
+        
+        #Return map with order
+        return self.map_with_f
