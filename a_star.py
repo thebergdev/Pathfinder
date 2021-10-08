@@ -111,7 +111,7 @@ def a_star(map, start, goals, cost_cap=9):
             current_node = heapq.heappop(open_list)
         #Else return with no path from start to any goal
         else:
-            return -1, [], [], map, node_history_list
+            return -1, [], [], node_history_list
 
     #Extract cost from current node, which is a goal
     cost = current_node.g
@@ -130,5 +130,5 @@ def a_star(map, start, goals, cost_cap=9):
     path.append(start.cord)
     node_path.append(start)
     
-    #return path cost, path as lists of cords, path as list of nodes, map, list of nodes as used
-    return cost, path[::-1], node_path.reverse(), map, node_history_list
+    #return path cost, path as lists of cords, path as list of nodes, list of nodes as used
+    return cost, path[::-1], node_path.reverse(), node_history_list
