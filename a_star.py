@@ -31,17 +31,20 @@ class Node:
         self.parent = parent
         self.movement_cost = moevement_cost
 
-        #If node is not start node, set g, h and f values
+        #If node is not start node, set g
         if moevement_cost > -1 and parent is not None:
             self.g = parent.g + moevement_cost
             self.h = bmd(cord, goals)
             self.f = self.g + self.h
-        #Node is start node
+
+        #Node is start node, set g = 0
         else:
-            self.g = -1
-            self.h = -1
-            self.f = -1
-    
+            self.g = 0
+        
+        #Set h and f values
+        self.h = bmd(cord, goals)
+        self.f = self.g + self.h
+        
     #OVERRIDE equals
     def __eq__(self, other):
         if self.cord == other.cord:
@@ -83,13 +86,14 @@ def a_star(map, start, goals, cost_cap=9):
     open_list = []
     closed_list = []
     node_history_list = []
+    node_discover_history_list = [start]
 
     #Loop until goal is found
     while current_node.is_goal(goals) is False:
         #add current node to closed list
         closed_list.append(current_node)
 
-        #add current node to node-history list
+        #add current node to node-history lists
         node_history_list.append(current_node)
         
         #Initializing list for children of current node
@@ -105,16 +109,20 @@ def a_star(map, start, goals, cost_cap=9):
         for child in children:
             if child.movement_cost < cost_cap and not child.in_list(closed_list):
                 heapq.heappush(open_list, child)
+                node_discover_history_list.append(child)
         
         #If open_list has entries, choose node with smallest f as current node
         if(len(open_list) > 0):
             current_node = heapq.heappop(open_list)
         #Else return with no path from start to any goal
         else:
-            return -1, [], [], node_history_list
+            return -1, [], [], node_history_list, node_discover_history_list
 
     #Extract cost from current node, which is a goal
     cost = current_node.g
+
+    #Add goal node to node_history_list
+    node_history_list.append(current_node)
 
     #Initializing lists for presenting found path
     path = []
@@ -131,4 +139,4 @@ def a_star(map, start, goals, cost_cap=9):
     node_path.append(start)
     
     #return path cost, path as lists of cords, path as list of nodes, list of nodes as used
-    return cost, path[::-1], node_path.reverse(), node_history_list
+    return cost, path[::-1], node_path.reverse(), node_history_list, node_discover_history_list
