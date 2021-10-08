@@ -357,5 +357,5 @@ class MapObj():
             #Set temp as map_with_f
             self.map_with_f = temp
         
-        #Return map with order
+        #Return map with f
         return self.map_with_f
